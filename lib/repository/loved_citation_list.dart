@@ -18,4 +18,8 @@ class LovedCitationList {
     await GetIt.I.get<LovedCitationRepository>().delete(lovedCitationModel);
     citations.removeWhere((item) => item.id == lovedCitationModel.id);
   }
+
+  bool isContained(String text) {
+    return citations.any((item) => item.text == text);
+  }
 }

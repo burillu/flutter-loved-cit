@@ -110,7 +110,9 @@ class _HomePageState extends State<HomePage> {
                             addLovedCitation(snapshot.data!);
                           },
                           icon: Icon(
-                            Icons.favorite_outline,
+                            (!lovedCitationList.isContained(snapshot.data!)
+                                ? Icons.favorite_outline
+                                : Icons.favorite),
                             color: Colors.red[300],
                             size: 50,
                           ),
