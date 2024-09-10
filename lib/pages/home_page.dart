@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:loved_cit/model/loved_citation_model.dart';
 import 'package:loved_cit/repository/loved_citation_list.dart';
 import 'package:loved_cit/repository/quote_repository.dart';
 
@@ -36,6 +37,11 @@ class _HomePageState extends State<HomePage> {
 
   void addLovedCitation(String citation) async {
     await lovedCitationList.create(citation);
+    setState(() {});
+  }
+
+  void deleteLoved(LovedCitationModel citation) async {
+    await lovedCitationList.delete(citation);
     setState(() {});
   }
 
@@ -120,13 +126,16 @@ class _HomePageState extends State<HomePage> {
   Widget sectionSavedList() => SliverList(
         delegate: SliverChildBuilderDelegate(
           childCount: lovedCitationList.citations.length,
-          (context, index) => Container(
-            padding: EdgeInsets.all(20),
-            height: 250,
-            color: colors[index % colors.length],
-            child: AutoSizeText(
-              lovedCitationList.citations[index].text,
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w400),
+          (context, index) => GestureDetector(
+            onDoubleTap: () => deleteLoved(lovedCitationList.citations[index]),
+            child: Container(
+              padding: EdgeInsets.all(20),
+              height: 250,
+              color: colors[index % colors.length],
+              child: AutoSizeText(
+                lovedCitationList.citations[index].text,
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w400),
+              ),
             ),
           ),
         ),
