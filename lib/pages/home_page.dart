@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:loved_cit/repository/loved_citation_list.dart';
 import 'package:loved_cit/repository/quote_repository.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,6 +10,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<String> citationFuture;
+  final lovedCitationList = LovedCitationList();
+
   final List<Color> colors = [
     Color(0xFF66ffbe),
     Color(0xFFfff267),
@@ -23,11 +26,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    lovedCitationList.initialize().then((_) => setState(() {}));
     getCitation();
   }
 
   getCitation() {
-    citationFuture = QuoteRepository.get();
+    citationFuture = CitationRepository.get();
+  }
+
+  void addLovedCitation(String citation) async {
+    await lovedCitationList.create(citation);
+    setState(() {});
   }
 
   @override
@@ -91,7 +100,9 @@ class _HomePageState extends State<HomePage> {
                           width: 10,
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            addLovedCitation(snapshot.data!);
+                          },
                           icon: Icon(
                             Icons.favorite_outline,
                             color: Colors.red[300],
@@ -108,13 +119,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget sectionSavedList() => SliverList(
         delegate: SliverChildBuilderDelegate(
-          childCount: 10,
+          childCount: lovedCitationList.citations.length,
           (context, index) => Container(
             padding: EdgeInsets.all(20),
             height: 250,
             color: colors[index % colors.length],
             child: AutoSizeText(
-              "citation mega ultra filosofica strappalacrime salvata",
+              lovedCitationList.citations[index].text,
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w400),
             ),
           ),
